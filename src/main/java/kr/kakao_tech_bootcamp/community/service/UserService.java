@@ -5,6 +5,7 @@ import kr.kakao_tech_bootcamp.community.dto.request.ImageRequestDto;
 import kr.kakao_tech_bootcamp.community.dto.request.user.ChangeMyInfoRequestDto;
 import kr.kakao_tech_bootcamp.community.dto.request.user.CheckPasswordRequestDto;
 import kr.kakao_tech_bootcamp.community.dto.request.user.SignUpRequestDto;
+import kr.kakao_tech_bootcamp.community.dto.response.user.ChangeMyInfoResponseDto;
 import kr.kakao_tech_bootcamp.community.dto.response.user.CheckPasswordResponseDto;
 import kr.kakao_tech_bootcamp.community.dto.response.user.GetMeResponseDto;
 import kr.kakao_tech_bootcamp.community.dto.response.user.SignUpResponseDto;
@@ -73,11 +74,10 @@ public class UserService {
     }
 
     // 회원정보 수정
-    public void changeMyInfo(int userId, ChangeMyInfoRequestDto changeMyInfoRequestDto) {
+    public ChangeMyInfoResponseDto changeMyInfo(int userId, ChangeMyInfoRequestDto changeMyInfoRequestDto) {
         // 닉네임 길이 확인
         String nickname = changeMyInfoRequestDto.getNickname();
         ImageRequestDto imageRequestDto = changeMyInfoRequestDto.getImage();
-        String imagePath = imageRequestDto.getImagePath();
         if (nickname == null || nickname.isEmpty()) {
             throw new IllegalArgumentException("닉네임을 입력해주세요");
         }
@@ -94,9 +94,11 @@ public class UserService {
 
         user.setNickname(nickname);
 
-        if (imagePath != null) {
-            user.setImage(imagePath, imageRequestDto.getImageName());
+        if (imageRequestDto != null) {
+            user.setImage(imageRequestDto.getImagePath(), imageRequestDto.getImageName());
         }
+
+        return ChangeMyInfoResponseDto.of(user.getImagePath(), user.getEmail(), user.getNickname());
     }
 
     // 현재 비밀번호 확인
