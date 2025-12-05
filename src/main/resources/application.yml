@@ -22,7 +22,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
         use_sql_comments: true
-
   servlet:
     multipart:
       enabled: true
@@ -38,6 +37,9 @@ spring:
 
   profiles:
     active: dev
+
+  jackson:
+    time-zone: Asia/Seoul
 
 logging:
   level:
