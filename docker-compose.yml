@@ -1,6 +1,6 @@
 services:
   backend:
-    image: 586421527844.dkr.ecr.ap-northeast-2.amazonaws.com/dorandoran-be:latest
+    image: 586421527844.dkr.ecr.ap-northeast-2.amazonaws.com/dorandoran-be:v1.5
     container_name: dorandoran-be
 
     ports:

@@ -8,6 +8,8 @@ if [ ! -f docker-compose.yml ]; then
   exit 0
 fi
 
-if [ -n "$(docker compose ps -q)" ]; then
+CONTAINERS=$(docker compose ps -q >/dev/null 2>&1)
+
+if [ -n "$CONTAINERS" ]; then
   docker compose down || true
 fi
