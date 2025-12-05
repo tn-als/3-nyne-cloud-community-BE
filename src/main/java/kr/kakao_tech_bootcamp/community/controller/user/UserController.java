@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.kakao_tech_bootcamp.community.dto.ApiResponse;
 import kr.kakao_tech_bootcamp.community.dto.request.user.*;
-import kr.kakao_tech_bootcamp.community.dto.response.user.CheckPasswordResponseDto;
-import kr.kakao_tech_bootcamp.community.dto.response.user.ExistCheckResponseDto;
-import kr.kakao_tech_bootcamp.community.dto.response.user.GetMeResponseDto;
-import kr.kakao_tech_bootcamp.community.dto.response.user.SignUpResponseDto;
+import kr.kakao_tech_bootcamp.community.dto.response.user.*;
 import kr.kakao_tech_bootcamp.community.jwt.JwtProvider;
 import kr.kakao_tech_bootcamp.community.service.UserService;
 import kr.kakao_tech_bootcamp.community.util.CookieUtil;
@@ -72,13 +69,12 @@ public class UserController {
 
     @PatchMapping
     @Operation(summary = "내 정보 변경", security = {@SecurityRequirement(name = "bearerAuth")})
-    public ResponseEntity<ApiResponse<Void>> changeMyInfo(
+    public ResponseEntity<ApiResponse<ChangeMyInfoResponseDto>> changeMyInfo(
             HttpServletRequest request,
             @RequestBody ChangeMyInfoRequestDto changeMyInfoRequestDto){
         int userId = jwtProvider.extractUserIdFromRequest(request);
-        userService.changeMyInfo(userId, changeMyInfoRequestDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.success(200, "회원 정보가 수정되었습니다."));
+                .body(ApiResponse.success(200, "회원 정보가 수정되었습니다.", userService.changeMyInfo(userId, changeMyInfoRequestDto)));
     }
 
     @PostMapping(path = "/password")
