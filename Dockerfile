@@ -8,6 +8,13 @@ RUN ./gradlew clean bootJar
 # 런타임
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
+
+# 타임존
+RUN apk add --no-cache tzdata
+ENV TZ=Asia/Seoul
+RUN cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime \
+    && echo "Asia/Seoul" > /etc/timezone
+
 COPY --from=builder /app/build/libs/community-0.0.1-SNAPSHOT.jar /app/community-0.0.1-SNAPSHOT.jar
 
 EXPOSE 8080
