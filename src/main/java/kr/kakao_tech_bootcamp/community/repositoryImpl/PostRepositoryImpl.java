@@ -13,6 +13,7 @@ import kr.kakao_tech_bootcamp.community.entity.PostImage;
 import kr.kakao_tech_bootcamp.community.repository.post.PostImageRepository;
 import kr.kakao_tech_bootcamp.community.repository.post.PostQueryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -24,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.querydsl.core.types.dsl.Expressions.constant;
 import static kr.kakao_tech_bootcamp.community.entity.QPost.post;
 import static kr.kakao_tech_bootcamp.community.entity.QPostLike.postLike;
 import static kr.kakao_tech_bootcamp.community.entity.QUser.user;
 
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostQueryRepository {
@@ -96,7 +97,7 @@ public class PostRepositoryImpl implements PostQueryRepository {
                         post.likesCount,
                         post.commentsCount,
                         post.viewsCount,
-                        post.user.id.eq(userId),
+                        postLike.id.isNotNull(),
                         Projections.constructor(Author.class,
                                 Projections.constructor(ImageResponseDto.class,
                                         user.imagePath,
