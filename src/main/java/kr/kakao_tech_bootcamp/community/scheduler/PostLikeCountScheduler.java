@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class PostLikeCountScheduler {
     private final PostRepository postRepository;
-    private final PostLikeRepository postLikeRepository;
     private final PostLikeCountManager postLikeCountManager;
 
     // 1분마다 실행

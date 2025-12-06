@@ -26,13 +26,18 @@ public interface PostRepository extends JpaRepository<Post, Integer>, PostQueryR
     void updatePostCommentsCount(@Param("postId") int postId, @Param("count") int count);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
-    @Query("update Post p set p.likesCount = p.likesCount + :count where p.id = :postId")
+    @Query("""
+        update Post p 
+        set p.likesCount = 
+            case
+                when p.likesCount + :count < 0 then 0
+                else p.likesCount + :count
+            end
+        where p.id = :postId
+    """)
     void updatePostLikesCount(@Param("postId") int postId, @Param("count") int count);
 
 
     @Query("select p from Post p join fetch p.user where p.id = :id")
     Optional<Post> findByIdWithUser(@Param("id") int id);
-
-    boolean existsByTitle(String title);
-    boolean existsByContent(String content);
 }

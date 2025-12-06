@@ -18,8 +18,7 @@ public class PostLikeCountManager {
     }
 
     public void decreaseLike(int postId) {
-        int count = postLikeCountMap.getOrDefault(postId, 0);
-        postLikeCountMap.put(postId, count == 0 ? 0 : count - 1);
+        postLikeCountMap.put(postId, postLikeCountMap.getOrDefault(postId, 0) - 1);
     }
 
     public int getPostLikeCount(int postId) {
