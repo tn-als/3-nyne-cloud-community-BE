@@ -54,7 +54,7 @@ public class PostLikeService {
 
         postLikeRepository.deleteByUserIdAndPostId(userId, postId);
 
-        int count = post.getLikesCount() - postLikeCountManager.getPostLikeCount(postId);
+        int count = post.getLikesCount() + postLikeCountManager.getPostLikeCount(postId);
 
         return PostLikeResponseDto.of(postId, Math.max(count, 0));
     }
