@@ -1,5 +1,7 @@
 package kr.kakao_tech_bootcamp.community.repositoryImpl;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,10 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.querydsl.core.types.dsl.Expressions.constant;
@@ -30,6 +34,11 @@ public class CommentRepositoryImpl implements CommentQueryRepository {
 
     @Override
     public Slice<AllCommentResponseDto> getAllComments(int userId, int postId, Pageable pageable) {
+        List<OrderSpecifier> orders = new ArrayList<>();
+        for(Sort.Order order: pageable.getSort()) {
+            Order sortOrder = order.isAscending()?Order.ASC:Order.DESC;
+        }
+
         List<AllCommentResponseDto> allCommentResponseDtoList =  jpaQueryFactory
                 .select(Projections.constructor(AllCommentResponseDto.class,
                         comment.id.as("commentId"),
@@ -47,7 +56,7 @@ public class CommentRepositoryImpl implements CommentQueryRepository {
                 .join(comment.post, post)
                 .join(comment.user, user)
                 .where(comment.post.id.eq(postId))
-                .orderBy(comment.createdAt.desc())
+                .orderBy(orders.toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
